@@ -1,0 +1,145 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>GoogleBook検索</title>
+    <style>
+        body {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 16px;
+  background-color: #f7ebde;
+  background-image: url("./wp2_image/back1.jpeg");
+  background-size: cover;
+}
+
+header {
+  background-color: #fdd8b3;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  color: #fff;
+}
+
+main {
+/*  border-bottom: 1px solid #ccc;*/
+}
+    
+h1{
+  color: #535353;
+  font-size:25px;
+}
+    
+h2{
+  font-size:16px;
+}
+
+p {
+  color: #535353;
+  font-size: 100%;
+  text-align: center;
+/*  border-bottom: 1px solid #fff;*/
+  height: 100px;
+}
+
+ul {
+  padding: 0;
+  border-top: 1px solid #626262;
+  display: table;
+  /* 定義 */
+  table-layout: fixed;
+  width: 100%;
+}
+
+li {
+  color: #ffffff;
+  text-align: center;
+  list-style-type: none;
+/*  border: 1px solid #666;*/
+  background-color: rgba(0, 0, 0, 0.25);
+  display: table-cell;
+  /* 定義 */
+  cursor: pointer;
+}
+
+li:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+textarea{
+  margin: 3%;
+  width: 30%;
+  height: 30px;
+  font-size:50%;
+  box-shadow: 3px 3px 3px 3px #555;
+}
+</style>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+</head>
+
+<body>
+    <div id=title><img src="./wp2_image/title3.png"></div>
+    <h1>キーワードを検索</h1>
+    <input id="query" type="text">
+    <button id="mybtn">実行</button>
+    <!--  <div id="contents"></div>-->
+
+    <main>
+        <p id="content">ここに表示されます</p>
+    </main>
+
+
+    <script>
+        "use strict";
+        /* global $ loadSheets */
+        $(function() {
+            $("#mybtn").on("click", showdata);
+
+            function showdata() {
+                let query = $("#query").val();
+                //varでもletでもかける。が、let推奨(というか全部letでok)
+                //let:ブロック内で有効 詳しくはメモ帳or
+                //const:一回入れたら変えないときに使う
+                //②を取得
+                $.getJSON(
+                    //"https://www.googleapis.com/books/v1/volumes?q=" + query,
+                    "http://web.fujimura.com/ko/books.php?q=" + query,
+                    //②をしっぽにくっつける
+                    function(data) {
+                        console.log(data);
+                        //            console.log(data.items[0].volumeInfo.imageLinks.thumbnail);
+
+                        //            $("#contents").append("<img src='" + data.items[0].volumeInfo.imageLinks.thumbnail + "'/>");
+                        //appendで画像を追加表示されていく
+                        //画像が出ないときはif文などで回避できるとなおよし
+
+                        let view = ""; //表示文字列を入れる変数
+                        for (var i = 0; i < data.items.length; i++) {
+                            let item = data.items[i];
+                            let item_img = "";
+                            if (data.items[i].volumeInfo.imageLinks == undefined) {
+                                item_img = "<img src='./wp2_image/no_image.png'>" + "<br>" + "見つかりませんでした。";
+                            } else {
+                                item_img = "<img src='" + data.items[i].volumeInfo.imageLinks.thumbnail + "'/>";
+                            }
+                            console.log(item_img);
+                            //              console.log(data.items[i].volumeInfo.imageLinks.thumbnail);
+                            let item_pDate = data.items[i].volumeInfo.publishedDate;
+                            //console.log(s);
+                            view += '<ul>';
+                            view += '<li>題名：' + item.volumeInfo.title + "<br>" + "刊行日付: " + item_pDate + '</li>';
+                            view += '<li>画像: ' + item_img + '</li>';
+                            view += '</ul>';
+                        }
+
+                        //変数に入った文字列をを表示
+                        $("#content").html(view);
+                    });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
