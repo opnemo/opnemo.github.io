@@ -103,8 +103,8 @@ textarea{
                 //const:一回入れたら変えないときに使う
                 //②を取得
                 $.getJSON(
-                    //"https://www.googleapis.com/books/v1/volumes?q=" + query,
-                    "http://web.fujimura.com/ko/books.php?q=" + query,
+                    "https://www.googleapis.com/books/v1/volumes?q=" + query,
+                    //"http://web.fujimura.com/ko/books.php?q=" + query,
                     //②をしっぽにくっつける
                     function(data) {
                         console.log(data);
